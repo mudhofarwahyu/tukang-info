@@ -1,0 +1,23 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Tukang Terdekat</title><style>body{font-family:Arial;background:#111;color:#fff;padding:20px}a{color:#ffcc00;text-decoration:none;font-weight:bold}.card{background:#1f1f1f;padding:15px;border-radius:14px;margin-top:15px}</style></head><body><a href="index.html">← Kembali ke Home</a><h1>📍 Hasil Tukang Terdekat</h1>
+<div id="hasil-tukang-list" style="padding:20px;color:white;">
+  <h2>Daftar Tukang Terdekat</h2>
+  <div id="tukang-container"></div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+  const data = JSON.parse(localStorage.getItem("tukangData") || "[]");
+  const container = document.getElementById("tukang-container");
+  if(data.length === 0){
+    container.innerHTML = "<p>Belum ada tukang ditemukan</p>";
+  } else {
+    container.innerHTML = data.map(t => `
+      <div style="background:#1a1a1a;padding:15px;border-radius:12px;margin-bottom:10px;">
+        <h3>${t.nama || 'Tukang'}</h3>
+        <p>${t.keahlian || ''}</p>
+        <p>${t.lokasi || ''}</p>
+      </div>
+    `).join('');
+  }
+});
+</script>
+</body></html>
