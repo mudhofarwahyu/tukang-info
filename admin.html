@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Tukang Pendaftaran</title>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="firebase.js"></script>
+</head>
+<body>
+  <h1>Panel Admin</h1>
+  <table id="tukangTable">
+    <thead>
+      <tr>
+        <th>Nama Tukang</th>
+        <th>Jenis Pekerjaan</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <script>
+    // Fetch tukang data from Firestore and display in the table
+    var tukangRef = db.collection("tukang");
+    tukangRef.get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        var row = document.createElement('tr');
+        row.innerHTML = `<td>${doc.data().nama}</td><td>${doc.data().pekerjaan}</td><td>${doc.data().email}</td>`;
+        document.querySelector("#tukangTable tbody").appendChild(row);
+      });
+    });
+  </script>
+</body>
+</html>
