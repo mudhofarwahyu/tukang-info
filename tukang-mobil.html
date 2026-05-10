@@ -1319,6 +1319,50 @@ footer strong { color: var(--gold); }
   <p>© 2024 <strong>Info Tukang</strong> · Platform Marketplace Jasa Terpercaya</p>
   <p style="margin-top:6px">WA Admin: <strong>085175385175</strong> · Dibuat dengan ❤ untuk masyarakat Indonesia</p>
 </footer>
+
+<script>
+    // Function to save data in localStorage
+    function saveToLocalStorage(key, data) {
+        localStorage.setItem(key, JSON.stringify(data));
+    }
+
+    // Function to get data from localStorage
+    function getFromLocalStorage(key) {
+        return JSON.parse(localStorage.getItem(key));
+    }
+    
+    // Example usage: Save some data when the page is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        let userData = { name: "John Doe", role: "Tukang" };
+        saveToLocalStorage('userData', userData);
+        
+        // Retrieve data and display
+        let storedData = getFromLocalStorage('userData');
+        console.log(storedData.name); // Outputs: John Doe
+    });
+</script>
+
+<script>
+    // Function to save data in localStorage
+    function saveToLocalStorage(key, data) {
+        localStorage.setItem(key, JSON.stringify(data));
+    }
+
+    // Function to get data from localStorage
+    function getFromLocalStorage(key) {
+        return JSON.parse(localStorage.getItem(key));
+    }
+    
+    // Example usage: Save some data when the page is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        let userData = { name: "John Doe", role: "Tukang" };
+        saveToLocalStorage('userData', userData);
+        
+        // Retrieve data and display
+        let storedData = getFromLocalStorage('userData');
+        console.log(storedData.name); // Outputs: John Doe
+    });
+</script>
 </body>
 </html>
 

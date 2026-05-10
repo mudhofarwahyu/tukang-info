@@ -1293,16 +1293,9 @@ footer strong { color: var(--gold); }
     <div class="hero-badge">Butuh Info Tukang? Hanya di tukang.info</div>
     <h1>Semua <span>Tukang</span><br>Ada Di Sini</h1>
     <p>Hubungkan kebutuhan Anda dengan ribuan tukang profesional berpengalaman. Cepat, mudah, dan terpercaya!</p>
-    <div class="location-bar" id="location-bar" style="max-width:900px;margin:24px auto 28px auto">
-      <div class="location-icon-wrap">📍</div>
-      <div class="location-info">
-        <div class="location-label">Lokasi Kamu</div>
-        <div class="location-value detecting" id="location-display">Belum terdeteksi — klik tombol untuk deteksi area layanan</div>
-      </div>
-      <button class="loc-btn loc-detect-btn" id="loc-btn" onclick="detectLocation()">🔍 Deteksi</button>
-      <button class="loc-btn loc-reset-btn" id="loc-reset-btn" onclick="resetLocation()" style="display:none">✕ Reset</button>
-      <button class="loc-btn" id="loc-search-btn" onclick="showNearbyPage()" style="display:none;background:linear-gradient(135deg, #F0A500, #FFD060);color:#0A0A0A;font-weight:800;border-color:#F0A500">🚀 Lihat Area</button>
-    </div>
+    <button class="hero-cta" onclick="goNearbyPage()">
+      📍 Cari Tukang Terdekat
+    </button>
     <div class="hero-badge" style="margin-bottom:28px">✅ Platform Kebutuhan Tukang Terpercaya #1 · EST. 2024</div>
     <div class="hero-stats">
       <div class="stat">
@@ -1329,10 +1322,22 @@ footer strong { color: var(--gold); }
   <!-- HOME SECTION -->
   <div id="home-section">
 
+    <!-- LOCATION BAR -->
+    <div class="location-bar" id="location-bar">
+      <div class="location-icon-wrap">📍</div>
+      <div class="location-info">
+        <div class="location-label">Lokasi Kamu</div>
+        <div class="location-value detecting" id="location-display">Belum terdeteksi — klik tombol untuk cari tukang terdekat</div>
+      </div>
+      <button class="loc-btn loc-detect-btn" id="loc-btn" onclick="detectLocation()">🔍 Deteksi</button>
+      <button class="loc-btn loc-reset-btn" id="loc-reset-btn" onclick="resetLocation()" style="display:none">✕ Reset</button>
+      <button class="loc-btn" id="loc-search-btn" onclick="showNearbyPage()" style="display:none;background:linear-gradient(135deg, #F0A500, #FFD060);color:#0A0A0A;font-weight:800;border-color:#F0A500">🚀 Cari Terdekat</button>
+    </div>
+
     <!-- NEARBY SECTION -->
     <div id="nearby-section" style="display:none;margin-bottom:44px">
-      <div class="nearby-section-title">Area <span>Layanan</span> Kamu <span class="nearby-badge">● LIVE</span></div>
-      <div class="section-sub" id="nearby-sub">Mitra siap melayani di area terdeteksi</div>
+      <div class="nearby-section-title">Tukang <span>Terdekat</span> dari Kamu <span class="nearby-badge">● LIVE</span></div>
+      <div class="section-sub" id="nearby-sub">Tukang siap melayani di area kamu</div>
       <div class="nearby-filter-row">
         <span class="nearby-filter-label">Radius:</span>
         <button class="radius-chip active" onclick="setNearbyRadius(5, this)">5 km</button>
@@ -1353,7 +1358,7 @@ footer strong { color: var(--gold); }
       <div class="tukang-header">
         <div>
           <div class="section-title">📍 Tukang <span>Terdekat</span></div>
-          <div class="section-sub" id="nearby-page-sub">Mitra siap melayani di area terdeteksi</div>
+          <div class="section-sub" id="nearby-page-sub">Tukang siap melayani di area Anda</div>
         </div>
         <button class="back-btn" onclick="closeNearbyPage()">✕ Tutup</button>
       </div>
@@ -1556,21 +1561,10 @@ const DEFAULT_TUKANG = [
 ];
 
 function loadData() {
-  // bersihkan data lama bawaan agar semua device memakai data admin terbaru
-  localStorage.removeItem('tukangData');
-  localStorage.removeItem('dummyTukang');
-
   const saved = localStorage.getItem('infotukang_data');
-  if (saved) {
-    try {
-      return JSON.parse(saved);
-    } catch(e) {
-      console.error('Data rusak:', e);
-    }
-  }
-
-  // jangan tampilkan data dummy bawaan di device baru
-  return [];
+  if (saved) { try { return JSON.parse(saved); } catch(e) {} }
+  localStorage.setItem('infotukang_data', JSON.stringify(DEFAULT_TUKANG));
+  return DEFAULT_TUKANG;
 }
 function saveData(data) { localStorage.setItem('infotukang_data', JSON.stringify(data)); }
 
@@ -1698,7 +1692,7 @@ function goNearbyPage() {
 
 function showNearbyPage() {
   if (!userLocation) {
-    showToast('Area belum terdeteksi! Silakan aktifkan deteksi area terlebih dahulu.', 'error');
+    showToast('Lokasi belum terdeteksi! Silakan deteksi lokasi terlebih dahulu.', 'error');
     return;
   }
   const locName = userLocation.displayName || `${userLocation.lat.toFixed(3)}, ${userLocation.lng.toFixed(3)}`;
@@ -1757,7 +1751,7 @@ function renderNearbyPageGrid() {
 
 // ===== LOCATION =====
 let userLocation = null;
-let nearbyRadiusKm = 25;
+let nearbyRadiusKm = 5;
 
 const CITY_COORDS = {
   'jakarta': { lat: -6.2088, lng: 106.8456 },
@@ -1773,9 +1767,9 @@ function detectLocation() {
   btn.textContent = '⏳ ...';
   btn.disabled = true;
   display.className = 'location-value detecting';
-  display.textContent = 'Mendeteksi area layanan kamu...';
+  display.textContent = 'Mendeteksi lokasi kamu...';
   if (!navigator.geolocation) {
-    display.textContent = '❌ Browser tidak mendukung deteksi area';
+    display.textContent = '❌ Browser tidak mendukung geolokasi';
     btn.textContent = '🔍 Deteksi'; btn.disabled=false; return;
   }
   navigator.geolocation.getCurrentPosition(async (pos) => {
@@ -1804,8 +1798,8 @@ function detectLocation() {
       showNearbySection(); showToast('📍 Lokasi berhasil dideteksi!','success');
     }
   }, (err) => {
-    let msg='Gagal mendeteksi area';
-    if(err.code===1) msg='Izin deteksi area ditolak';
+    let msg='Gagal mendeteksi lokasi';
+    if(err.code===1) msg='Izin lokasi ditolak';
     display.textContent='❌ '+msg;
     btn.textContent='🔍 Deteksi'; btn.disabled=false;
     showToast(msg,'error');
@@ -1815,7 +1809,7 @@ function detectLocation() {
 function resetLocation() {
   userLocation=null;
   document.getElementById('location-display').className='location-value detecting';
-  document.getElementById('location-display').textContent='Belum terdeteksi — klik tombol untuk deteksi area layanan';
+  document.getElementById('location-display').textContent='Belum terdeteksi — klik tombol untuk cari tukang terdekat';
   document.getElementById('nearby-section').style.display='none';
   document.getElementById('loc-reset-btn').style.display='none';
   document.getElementById('loc-search-btn').style.display='none';
@@ -1843,7 +1837,7 @@ function getTukangCoords(t) {
 
 function showNearbySection() {
   document.getElementById('nearby-section').style.display='block';
-  document.getElementById('nearby-sub').textContent=`Mitra tersedia di area ${userLocation.displayName||'lokasi kamu'}`;
+  document.getElementById('nearby-sub').textContent=`Tukang siap kerja di sekitar ${userLocation.displayName||'lokasi kamu'}`;
   renderNearbyGrid();
 }
 
@@ -1854,7 +1848,7 @@ function renderNearbyGrid() {
     const coords=getTukangCoords(t);
     const dist=coords?haversineKm(userLocation.lat,userLocation.lng,coords.lat,coords.lng):5+(t.id%20);
     return {...t,dist};
-  }).filter(t=>nearbyRadiusKm===99||t.dist<=nearbyRadiusKm+15).sort((a,b)=>a.dist-b.dist).slice(0,20);
+  }).filter(t=>nearbyRadiusKm===99||t.dist<=nearbyRadiusKm+15).sort((a,b)=>a.dist-b.dist).slice(0,8);
   if(scored.length===0) {
     grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">🔍</div><h3>Tidak Ada Tukang</h3><p>Coba perluas radius pencarian</p></div>`;
     return;
@@ -2024,6 +2018,50 @@ function showToast(msg,type='info') {
 }
 
 init();
+</script>
+
+<script>
+    // Function to save data in localStorage
+    function saveToLocalStorage(key, data) {
+        localStorage.setItem(key, JSON.stringify(data));
+    }
+
+    // Function to get data from localStorage
+    function getFromLocalStorage(key) {
+        return JSON.parse(localStorage.getItem(key));
+    }
+    
+    // Example usage: Save some data when the page is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        let userData = { name: "John Doe", role: "Tukang" };
+        saveToLocalStorage('userData', userData);
+        
+        // Retrieve data and display
+        let storedData = getFromLocalStorage('userData');
+        console.log(storedData.name); // Outputs: John Doe
+    });
+</script>
+
+<script>
+    // Function to save data in localStorage
+    function saveToLocalStorage(key, data) {
+        localStorage.setItem(key, JSON.stringify(data));
+    }
+
+    // Function to get data from localStorage
+    function getFromLocalStorage(key) {
+        return JSON.parse(localStorage.getItem(key));
+    }
+    
+    // Example usage: Save some data when the page is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        let userData = { name: "John Doe", role: "Tukang" };
+        saveToLocalStorage('userData', userData);
+        
+        // Retrieve data and display
+        let storedData = getFromLocalStorage('userData');
+        console.log(storedData.name); // Outputs: John Doe
+    });
 </script>
 </body>
 </html>
