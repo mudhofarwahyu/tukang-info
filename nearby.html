@@ -1,67 +1,79 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Tukang Terdekat</title><style>body{font-family:Arial;background:#111;color:#fff;padding:20px}a{color:#ffcc00;text-decoration:none;font-weight:bold}.card{background:#1f1f1f;padding:15px;border-radius:14px;margin-top:15px}</style></head><body><a href="index.html">← Kembali ke Home</a><h1>📍 Hasil Tukang Terdekat</h1>
-<div id="hasil-tukang-list" style="padding:20px;color:white;">
-  <h2>Daftar Tukang Terdekat</h2>
-  <div id="tukang-container"></div>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tukang Terdekat</title>
+<style>
+body{font-family:Arial,sans-serif;background:#0f0f0f;color:#fff;margin:0;padding:20px}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:10px;flex-wrap:wrap}
+.back{background:#f0a500;color:#111;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:bold}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.card{background:#1b1b1b;border-radius:18px;padding:18px;border:1px solid rgba(255,255,255,.08)}
+.name{font-size:20px;font-weight:700;margin-bottom:8px}
+.meta{opacity:.8;margin:6px 0;font-size:14px}
+.badge{display:inline-block;background:#1f6f3c;color:#fff;padding:6px 10px;border-radius:999px;font-size:12px;margin-bottom:10px}
+.empty{padding:30px;text-align:center;background:#1b1b1b;border-radius:18px}
+</style>
+</head>
+<body>
+<div class="header">
+<div>
+<h1>📍 Tukang Terdekat</h1>
+<p id="lokasi"></p>
 </div>
+<a class="back" href="index.html">← Kembali</a>
+</div>
+<div id="container" class="grid"></div>
 <script>
-document.addEventListener("DOMContentLoaded", function(){
-  const data = JSON.parse(localStorage.getItem("tukangData") || "[]");
-  const container = document.getElementById("tukang-container");
-  if(data.length === 0){
-    container.innerHTML = "<p>Belum ada tukang ditemukan</p>";
-  } else {
-    container.innerHTML = data.map(t => `
-      <div style="background:#1a1a1a;padding:15px;border-radius:12px;margin-bottom:10px;">
-        <h3>${t.nama || 'Tukang'}</h3>
-        <p>${t.keahlian || ''}</p>
-        <p>${t.lokasi || ''}</p>
-      </div>
-    `).join('');
-  }
-});
+const data = JSON.parse(localStorage.getItem('tukangData') || '[]');
+const userLocation = JSON.parse(localStorage.getItem('userLocation') || 'null');
+const container = document.getElementById('container');
+const lokasi = document.getElementById('lokasi');
+
+if(userLocation){
+ lokasi.textContent = 'Area: ' + (userLocation.displayName || 'Lokasi Terdeteksi');
+}
+
+function haversineKm(lat1, lon1, lat2, lon2) {
+ const R = 6371;
+ const dLat = (lat2-lat1) * Math.PI/180;
+ const dLon = (lon2-lon1) * Math.PI/180;
+ const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+ Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) *
+ Math.sin(dLon/2) * Math.sin(dLon/2);
+ return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
+}
+
+function getCoords(item){
+ if(item.latitude && item.longitude){
+   return {lat:parseFloat(item.latitude),lng:parseFloat(item.longitude)};
+ }
+ return null;
+}
+
+if(!data.length){
+ container.innerHTML = '<div class="empty">Belum ada data tukang dari panel admin.</div>';
+}else{
+ const hasil = data.map((item,index)=>{
+   const coords = getCoords(item);
+   let dist = 999;
+   if(userLocation && coords){
+     dist = haversineKm(userLocation.lat,userLocation.lng,coords.lat,coords.lng);
+   }
+   return {...item,dist};
+ }).sort((a,b)=>a.dist-b.dist);
+ 
+ container.innerHTML = hasil.map(item=>`
+ <div class="card">
+   <div class="badge">${item.status || 'siap'}</div>
+   <div class="name">${item.nama || 'Tukang'}</div>
+   <div class="meta">🛠️ ${item.keahlian || item.kategori || '-'}</div>
+   <div class="meta">📍 ${item.alamat || item.lokasi || '-'}</div>
+   <div class="meta">⭐ Rating: ${item.rating || 5}/5</div>
+   <div class="meta">📏 Jarak: ${item.dist === 999 ? 'Tidak diketahui' : Math.round(item.dist) + ' km'}</div>
+ </div>`).join('');
+}
 </script>
-
-<script>
-    // Function to save data in localStorage
-    function saveToLocalStorage(key, data) {
-        localStorage.setItem(key, JSON.stringify(data));
-    }
-
-    // Function to get data from localStorage
-    function getFromLocalStorage(key) {
-        return JSON.parse(localStorage.getItem(key));
-    }
-    
-    // Example usage: Save some data when the page is loaded
-    document.addEventListener('DOMContentLoaded', function() {
-        let userData = { name: "John Doe", role: "Tukang" };
-        saveToLocalStorage('userData', userData);
-        
-        // Retrieve data and display
-        let storedData = getFromLocalStorage('userData');
-        console.log(storedData.name); // Outputs: John Doe
-    });
-</script>
-
-<script>
-    // Function to save data in localStorage
-    function saveToLocalStorage(key, data) {
-        localStorage.setItem(key, JSON.stringify(data));
-    }
-
-    // Function to get data from localStorage
-    function getFromLocalStorage(key) {
-        return JSON.parse(localStorage.getItem(key));
-    }
-    
-    // Example usage: Save some data when the page is loaded
-    document.addEventListener('DOMContentLoaded', function() {
-        let userData = { name: "John Doe", role: "Tukang" };
-        saveToLocalStorage('userData', userData);
-        
-        // Retrieve data and display
-        let storedData = getFromLocalStorage('userData');
-        console.log(storedData.name); // Outputs: John Doe
-    });
-</script>
-</body></html>
+</body>
+</html>

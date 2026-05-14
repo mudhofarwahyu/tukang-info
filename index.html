@@ -1695,14 +1695,11 @@ function showNearbyPage() {
     showToast('Lokasi belum terdeteksi! Silakan deteksi lokasi terlebih dahulu.', 'error');
     return;
   }
-  const locName = userLocation.displayName || `${userLocation.lat.toFixed(3)}, ${userLocation.lng.toFixed(3)}`;
-  document.getElementById('nearby-page-sub').textContent = `Tukang siap melayani di area ${locName}`;
-  const nearbyPage = document.getElementById('nearby-page');
-  nearbyPage.classList.add('visible');
-  renderNearbyPageGrid();
-  setTimeout(() => {
-    nearbyPage.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 100);
+
+  // hanya gunakan data asli dari admin/pendaftaran tukang
+  localStorage.setItem('userLocation', JSON.stringify(userLocation));
+
+  window.location.href = 'nearby.html';
 }
 
 function closeNearbyPage() {
@@ -1784,18 +1781,23 @@ function detectLocation() {
       document.getElementById('location-display').className='location-value';
       document.getElementById('location-display').textContent=`📍 ${fullArea}`;
       document.getElementById('loc-reset-btn').style.display='';
-      document.getElementById('loc-search-btn').style.display='';
+      document.getElementById('loc-search-btn').style.display='none';
       btn.textContent='🔄 Perbarui'; btn.disabled=false;
       userLocation.displayName=fullArea; userLocation.city=city.toLowerCase();
-      showNearbySection();
+      // hanya gunakan data asli dari admin/pendaftaran tukang
+      localStorage.setItem('userLocation', JSON.stringify(userLocation));
       showToast(`📍 Lokasi: ${fullArea}`, 'success');
+      setTimeout(() => { window.location.href = 'nearby.html'; }, 700);
     } catch(e) {
       document.getElementById('location-display').className='location-value';
       document.getElementById('location-display').textContent=`📍 ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
       document.getElementById('loc-reset-btn').style.display='';
-      document.getElementById('loc-search-btn').style.display='';
+      document.getElementById('loc-search-btn').style.display='none';
       btn.textContent='🔄 Perbarui'; btn.disabled=false;
-      showNearbySection(); showToast('📍 Lokasi berhasil dideteksi!','success');
+      // hanya gunakan data asli dari admin/pendaftaran tukang
+      localStorage.setItem('userLocation', JSON.stringify(userLocation));
+      showToast('📍 Lokasi berhasil dideteksi!','success');
+      setTimeout(() => { window.location.href = 'nearby.html'; }, 700);
     }
   }, (err) => {
     let msg='Gagal mendeteksi lokasi';
@@ -2018,50 +2020,6 @@ function showToast(msg,type='info') {
 }
 
 init();
-</script>
-
-<script>
-    // Function to save data in localStorage
-    function saveToLocalStorage(key, data) {
-        localStorage.setItem(key, JSON.stringify(data));
-    }
-
-    // Function to get data from localStorage
-    function getFromLocalStorage(key) {
-        return JSON.parse(localStorage.getItem(key));
-    }
-    
-    // Example usage: Save some data when the page is loaded
-    document.addEventListener('DOMContentLoaded', function() {
-        let userData = { name: "John Doe", role: "Tukang" };
-        saveToLocalStorage('userData', userData);
-        
-        // Retrieve data and display
-        let storedData = getFromLocalStorage('userData');
-        console.log(storedData.name); // Outputs: John Doe
-    });
-</script>
-
-<script>
-    // Function to save data in localStorage
-    function saveToLocalStorage(key, data) {
-        localStorage.setItem(key, JSON.stringify(data));
-    }
-
-    // Function to get data from localStorage
-    function getFromLocalStorage(key) {
-        return JSON.parse(localStorage.getItem(key));
-    }
-    
-    // Example usage: Save some data when the page is loaded
-    document.addEventListener('DOMContentLoaded', function() {
-        let userData = { name: "John Doe", role: "Tukang" };
-        saveToLocalStorage('userData', userData);
-        
-        // Retrieve data and display
-        let storedData = getFromLocalStorage('userData');
-        console.log(storedData.name); // Outputs: John Doe
-    });
 </script>
 </body>
 </html>

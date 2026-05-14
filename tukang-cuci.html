@@ -1297,7 +1297,44 @@ footer strong { color: var(--gold); }
     <a href="index.html" class="back-btn">← Beranda</a>
   </div>
 
-  <div class="tukang-grid" id="tukang-grid"></div>
+  <div class="tukang-grid">
+    
+        <div class="tukang-card">
+          <div class="tukang-photo-wrap">
+            <div class="tukang-photo-placeholder">👷</div>
+            <div class="status-badge status-siap">● Siap</div>
+          </div>
+          <div class="tukang-info">
+            <div class="tukang-name">Mas Kevin Carwash</div>
+            <div style="font-size:11px;color:var(--gold);font-weight:700;margin-bottom:6px">🚿 Cuci Kendaraan</div>
+            <div class="star-row"><div class="stars">★★★★☆</div><div class="rating-num">4.0/5</div></div>
+            <div class="tukang-meta">
+              <div class="meta-item"><span class="meta-icon">⭐</span><div><span class="meta-label">Pengalaman</span><span class="meta-value">4 thn</span></div></div>
+              <div class="meta-item"><span class="meta-icon">🗺️</span><div><span class="meta-label">Radius</span><span class="meta-value">10 km</span></div></div>
+              <div class="meta-item" style="grid-column:1/-1"><span class="meta-icon">📍</span><div><span class="meta-label">Alamat</span><span class="meta-value" style="font-size:11px">Jl. Bersih No.1, Jakarta</span></div></div>
+            </div>
+            <a class="wa-btn-link" href="https://wa.me/6285175385175?text=Halo%20Admin%20InfoTukang%2C%20saya%20membutuhkan%20jasa%20Cuci%20Kendaraan%20yang%20bernama%20Mas%20Kevin%20Carwash%20%284%20thn%20pengalaman%29.%20Apakah%20beliau%20tersedia%3F%20Terima%20kasih." target="_blank" rel="noopener">💬 Hubungi via WhatsApp</a>
+          </div>
+        </div>
+
+        <div class="tukang-card">
+          <div class="tukang-photo-wrap">
+            <div class="tukang-photo-placeholder">👷</div>
+            <div class="status-badge status-siap">● Siap</div>
+          </div>
+          <div class="tukang-info">
+            <div class="tukang-name">Salon Kinclong Pak Bram</div>
+            <div style="font-size:11px;color:var(--gold);font-weight:700;margin-bottom:6px">🚿 Cuci Kendaraan</div>
+            <div class="star-row"><div class="stars">★★★★★</div><div class="rating-num">5.0/5</div></div>
+            <div class="tukang-meta">
+              <div class="meta-item"><span class="meta-icon">⭐</span><div><span class="meta-label">Pengalaman</span><span class="meta-value">14 thn</span></div></div>
+              <div class="meta-item"><span class="meta-icon">🗺️</span><div><span class="meta-label">Radius</span><span class="meta-value">15 km</span></div></div>
+              <div class="meta-item" style="grid-column:1/-1"><span class="meta-icon">📍</span><div><span class="meta-label">Alamat</span><span class="meta-value" style="font-size:11px">Jl. Kilap No.5, Depok</span></div></div>
+            </div>
+            <a class="wa-btn-link" href="https://wa.me/6285175385175?text=Halo%20Admin%20InfoTukang%2C%20saya%20membutuhkan%20jasa%20Cuci%20Kendaraan%20yang%20bernama%20Salon%20Kinclong%20Pak%20Bram%20%2814%20thn%20pengalaman%29.%20Apakah%20beliau%20tersedia%3F%20Terima%20kasih." target="_blank" rel="noopener">💬 Hubungi via WhatsApp</a>
+          </div>
+        </div>
+  </div>
 
   <div style="margin-top:48px;padding:28px;background:var(--card-bg);border:1.5px solid var(--border);border-radius:var(--radius);text-align:center">
     <div style="font-family:'Bebas Neue',cursive;font-size:24px;color:var(--cream);letter-spacing:2px;margin-bottom:8px">
@@ -1319,67 +1356,28 @@ footer strong { color: var(--gold); }
   <p>© 2024 <strong>Info Tukang</strong> · Platform Marketplace Jasa Terpercaya</p>
   <p style="margin-top:6px">WA Admin: <strong>085175385175</strong> · Dibuat dengan ❤ untuk masyarakat Indonesia</p>
 </footer>
-
-<script>
-    // Function to save data in localStorage
-    function saveToLocalStorage(key, data) {
-        localStorage.setItem(key, JSON.stringify(data));
-    }
-
-    // Function to get data from localStorage
-    function getFromLocalStorage(key) {
-        return JSON.parse(localStorage.getItem(key));
-    }
-    
-    // Example usage: Save some data when the page is loaded
-    document.addEventListener('DOMContentLoaded', function() {
-        let userData = { name: "John Doe", role: "Tukang" };
-        saveToLocalStorage('userData', userData);
-        
-        // Retrieve data and display
-        let storedData = getFromLocalStorage('userData');
-        console.log(storedData.name); // Outputs: John Doe
-    });
-</script>
-
-<script>
-    // Function to save data in localStorage
-    function saveToLocalStorage(key, data) {
-        localStorage.setItem(key, JSON.stringify(data));
-    }
-
-    // Function to get data from localStorage
-    function getFromLocalStorage(key) {
-        return JSON.parse(localStorage.getItem(key));
-    }
-    
-    // Example usage: Save some data when the page is loaded
-    document.addEventListener('DOMContentLoaded', function() {
-        let userData = { name: "John Doe", role: "Tukang" };
-        saveToLocalStorage('userData', userData);
-        
-        // Retrieve data and display
-        let storedData = getFromLocalStorage('userData');
-        console.log(storedData.name); // Outputs: John Doe
-    });
-</script>
 </body>
 </html>
-
 <script>
-(function(){
- const CATEGORY='cuci';
- const grid=document.getElementById('tukang-grid');
- const data=JSON.parse(localStorage.getItem('infotukang_data')||'[]').filter(t=>t.kategori===CATEGORY);
- function stars(n){return [1,2,3,4,5].map(i=>i<=n?'★':'☆').join('')}
- if(data.length===0){
-   grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1;text-align:center;padding:40px"><div class="empty-icon">📭</div><h3>Data Tukang Belum Tersedia</h3><p>Silakan tambah data tukang dari panel admin.</p></div>`;
-   return;
- }
- grid.innerHTML=data.map(t=>{
-   const foto=t.foto?`<img class="tukang-photo" src="${t.foto}" alt="${t.nama}">`:`<div class="tukang-photo-placeholder">👷</div>`;
-   return `<div class="tukang-card"><div class="tukang-photo-wrap">${foto}<div class="status-badge ${t.status==='siap'?'status-siap':'status-sibuk'}">● ${t.status==='siap'?'Siap':'Dalam Pekerjaan'}</div></div><div class="tukang-info"><div class="tukang-name">${t.nama}</div><div class="star-row"><div class="stars">${stars(t.rating||5)}</div><div class="rating-num">${t.rating||5}.0/5</div></div><div class="tukang-meta"><div class="meta-item"><span class="meta-icon">⭐</span><div><span class="meta-label">Pengalaman</span><span class="meta-value">${t.pengalaman||'-'} thn</span></div></div><div class="meta-item"><span class="meta-icon">🗺️</span><div><span class="meta-label">Radius</span><span class="meta-value">${t.radius||'-'}</span></div></div><div class="meta-item" style="grid-column:1/-1"><span class="meta-icon">📍</span><div><span class="meta-label">Alamat</span><span class="meta-value" style="font-size:11px">${t.alamat||'-'}</span></div></div></div></div></div>`
- }).join('');
-})();
-</script>
+document.addEventListener("submit", function(e){
+  const form = e.target;
+  const nama = form.querySelector('input[name="nama"], #nama');
+  if(!nama) return;
 
+  e.preventDefault();
+
+  const data = JSON.parse(localStorage.getItem("tukangData") || "[]");
+
+  const item = {
+    nama: nama?.value || "Tukang",
+    keahlian: (form.querySelector('input[name="keahlian"], #keahlian')||{}).value || "",
+    lokasi: (form.querySelector('input[name="lokasi"], #lokasi')||{}).value || ""
+  };
+
+  data.push(item);
+  localStorage.setItem("tukangData", JSON.stringify(data));
+
+  alert("Pendaftaran berhasil");
+  window.location.href = "nearby.html";
+});
+</script>
